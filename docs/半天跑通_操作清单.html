@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>半天跑通 QLoRA · 照着敲操作清单</title>
+<style>
+  :root{--bg:#f7f8fa;--card:#fff;--ink:#1a1d24;--sub:#4a5262;--line:#e3e7ee;
+    --accent:#1f5fd6;--soft:#eef3ff;--green:#1e7a4b;--greenbg:#edf8f1;
+    --red:#c0392b;--redbg:#fdf0ee;--amber:#9a6700;--amberbg:#fff8e6}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;font-size:15px;line-height:1.72}
+  .wrap{max-width:940px;margin:0 auto;padding:30px 22px 70px}
+  header{background:linear-gradient(135deg,#1f5fd6,#3a86ff);color:#fff;border-radius:14px;padding:24px 26px;margin-bottom:20px}
+  header h1{margin:0 0 5px;font-size:24px}
+  header p{margin:0;opacity:.93;font-size:14px}
+  .stat{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+  .stat span{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.34);
+    padding:3px 11px;border-radius:18px;font-size:12.5px}
+  h2{font-size:18px;margin:26px 0 12px;padding-left:11px;border-left:4px solid var(--accent)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:17px 20px;margin-bottom:13px}
+  .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+  .num{background:var(--accent);color:#fff;font-weight:700;font-size:13px;
+    min-width:26px;height:26px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center}
+  .done{background:var(--green)}
+  .todo{background:#8490a5}
+  .hd b{font-size:16px}
+  .pill{font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:5px}
+  .p-done{background:var(--greenbg);color:var(--green)}
+  .p-todo{background:#eef1f6;color:var(--sub)}
+  pre{background:#1e2430;color:#e8edf6;border-radius:8px;padding:12px 14px;
+    overflow-x:auto;font-size:12.8px;line-height:1.6;margin:9px 0;
+    font-family:Consolas,Monaco,monospace}
+  pre .c{color:#8fa3c4}
+  .say{background:#f2f6ff;border-left:3px solid var(--accent);padding:8px 12px;
+    border-radius:0 6px 6px 0;margin:8px 0;font-size:14px}
+  .ok{background:var(--greenbg);border-left:3px solid var(--green);padding:8px 12px;
+    border-radius:0 6px 6px 0;margin:8px 0;font-size:13.6px;color:#175c39}
+  .warn{background:var(--redbg);border-left:3px solid var(--red);padding:8px 12px;
+    border-radius:0 6px 6px 0;margin:8px 0;font-size:13.5px;color:#7d2b20}
+  .amb{background:var(--amberbg);border-left:3px solid var(--amber);padding:8px 12px;
+    border-radius:0 6px 6px 0;margin:8px 0;font-size:13.5px;color:#6b5417}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.6px;background:#fff}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#f0f4fb;color:var(--sub)}
+  code{background:#eef1f6;padding:1px 5px;border-radius:4px;font-size:12.7px;
+    font-family:Consolas,Monaco,monospace}
+  .foot{margin-top:24px;padding:15px 18px;background:#fff8e6;border:1px solid #f0dfae;
+    border-radius:10px;font-size:13.7px;color:#6b5417}
+  @media print{body{background:#fff}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>半天跑通 QLoRA · 照着敲操作清单</h1>
+  <p>目标不是学代码，是拿到面试那 7 个数字。每步都有「预期看到什么」和「失败了怎么办」。</p>
+  <div class="stat">
+    <span>环境：pytorch-env / Python 3.12.10</span><span>torch 2.9.1+cu126</span>
+    <span>RTX 4060 Laptop 8GB</span><span>CUDA 12.6 · bf16 可用</span><span>空闲显存 6.88GB</span>
+  </div>
+</header>
+
+<h2>先说清「第一步」到底是什么</h2>
+<div class="card">
+  <div class="say"><b>第一步 = 验收环境 + 跑通一次最小训练闭环。</b>不是装包、不是下载模型、更不是看代码。目的只有一个：证明这台机器<b>真的能用 GPU 把模型训起来</b>，而不是只在命令行里显示 "cuda available"。</div>
+  <table>
+    <tr><th>动作</th><th>做了什么</th><th>通过标准</th></tr>
+    <tr><td>① 认环境</td><td>找到你真正的 Python（<code>pytorch-env</code>），别用系统那个</td><td>版本号对得上</td></tr>
+    <tr><td>② 查显卡</td><td>读型号、显存、CUDA 版本、bf16 支持</td><td>8GB / 12.6 / True</td></tr>
+    <tr><td>③ 真算一次</td><td>在 GPU 上做一次前向 + 反向（不是只查询状态）</td><td>loss 和梯度有数值</td></tr>
+    <tr><td>④ 最小训练闭环</td><td>训练 → 保存 → 重新加载 → 推理</td><td>loss 降下去、预测对得上</td></tr>
+  </table>
+  <div class="ok"><b>已代跑完成，真实输出：</b>起始 loss 149.8535 → 最终 <b>0.0003</b>；学到 w=2.005（目标 2.0）、b=0.964（目标 1.0）；重新加载后 x=5 推理得 <b>10.990</b>（期望 11.0）。模型已存为 <code>step1_model.pth</code>。<br>脚本：<code>step1_verify_gpu.py</code>、<code>step1_train_minimal.py</code>（都在 <code>llm-roadmap/</code>）。</div>
+  <div class="amb"><b>这一步对面试的意义：</b>你已经能诚实说「我在本机 GPU 上跑通过完整的训练/保存/推理链路」。但<b>它还不够写进简历</b>——面试官要的是「微调了什么模型、什么数据、效果提升多少」，所以要继续第 2~5 步。</div>
+</div>
+
+<h2>后面四步（半天路线）</h2>
+
+<div class="card">
+  <div class="hd"><span class="num todo">2</span><b>装 QLoRA 依赖</b><span class="pill p-todo">约 5~10 分钟</span></div>
+  <div class="say">你这环境现在只有 <code>torch</code> + <code>numpy</code>。微调要用到 HuggingFace 全家桶，一次装齐。</div>
+  <pre><span class="c"># 在任意终端执行（用你自己的环境，别用系统 python）</span>
+c:/Users/admin/pytorch-env/Scripts/pip.exe install ^
+  transformers datasets peft trl accelerate bitsandbytes ^
+  -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+<span class="c"># 验证</span>
+c:/Users/admin/pytorch-env/Scripts/python.exe -c "import transformers,peft,bitsandbytes;print('OK')"</pre>
+  <div class="warn"><b>Windows 上最容易卡在这：</b><code>bitsandbytes</code> 是 4-bit 量化的核心，Windows 支持较晚，常见报错是「检测不到 CUDA / FATAL: CUDA Setup」。装不上先别死磕——<b>换 LoRA（不量化）先把链路跑通</b>，1.5B 模型 bf16 本来就装得下 8GB；之后再回头补 QLoRA 这个关键词。两头不耽误。</div>
+  <div class="ok"><b>预期看到：</b>最后一行打印 <code>OK</code>。</div>
+</div>
+
+<div class="card">
+  <div class="hd"><span class="num todo">3</span><b>下模型 + 下数据</b><span class="pill p-todo">约 10~20 分钟</span></div>
+  <div class="say"><b>8GB 显存只能选小模型</b>，别下 7B。首选 <code>Qwen2.5-1.5B-Instruct</code>（约 3GB，中文好、生态全）。数据用公开的少量指令数据即可，几百条就能跑。</div>
+  <pre><span class="c"># 国内直连 HuggingFace 慢，用镜像或 ModelScope</span>
+c:/Users/admin/pytorch-env/Scripts/pip.exe install modelscope -i https://pypi.tuna.tsinghua.edu.cn/simple
+c:/Users/admin/pytorch-env/Scripts/python.exe -c "from modelscope import snapshot_download; snapshot_download('qwen/Qwen2.5-1.5B-Instruct')"</pre>
+  <div class="amb"><b>为什么不用 GitHub：</b>LLaMA-Factory 那些仓库在 GitHub，你之前提过连不上；ModelScope 是国内源，稳。<br><b>数据格式：</b>统一成 <code>{"instruction":"...","input":"","output":"..."}</code>，训练前<b>先去重再切训练集/验证集</b>——面试会问这个。</div>
+  <div class="warn"><b>别说错：</b>简历别写"微调 LLaMA-7B"，8GB 卡跑不动 7B QLoRA（权重 4bit 约 4GB + 激活 + 优化器，很容易 OOM）。写清楚是 1.5B 反而可信，面试官一问显存就对得上。</div>
+</div>
+
+<div class="card">
+  <div class="hd"><span class="num todo">4</span><b>跑一次 QLoRA 微调</b><span class="pill p-todo">约 1~2 小时</span></div>
+  <div class="say">用 <code>peft</code> 官方示例或 LLaMA-Factory 的 yaml 配置，<b>改配置不改代码</b>。关键参数记下来，面试要报：</div>
+  <table>
+    <tr><th>参数</th><th>建议值</th><th>为什么</th></tr>
+    <tr><td>r / alpha</td><td>16 / 32</td><td>r 小数据够用，大了易过拟合</td></tr>
+    <tr><td>learning rate</td><td>1e-4 ~ 2e-4</td><td>LoRA 专用量级，比全量微调大</td></tr>
+    <tr><td>max_len</td><td>512</td><td>8GB 显存下别开 2048</td></tr>
+    <tr><td>batch</td><td>1 + 梯度累积 8</td><td>省显存</td></tr>
+    <tr><td>精度</td><td>bf16</td><td>4060 支持，比 fp16 不易溢出</td></tr>
+    <tr><td>必开</td><td>gradient checkpointing</td><td>用重算换显存，防 OOM</td></tr>
+  </table>
+  <div class="ok"><b>预期看到：</b>终端每隔若干步打印 <code>loss</code>，从 2.x 往 1.x 降；跑完生成 adapter 权重文件夹。</div>
+  <div class="warn"><b>最常见的两个坑：</b>① chat template 和训练格式不一致 → 模型复读、不停止；② label 没把 prompt 部分 mask 成 -100 → loss 降不下去。踩到任意一个，记下来，这就是面试「说个你遇到的坑」的答案。</div>
+</div>
+
+<div class="card">
+  <div class="hd"><span class="num todo">5</span><b>记录 7 个数字 + 前后对比</b><span class="pill p-todo">约 20 分钟</span></div>
+  <div class="say">这一步才是「能写进简历」的产出。做一张实验记录表，然后存 2~3 张对比截图。</div>
+  <table>
+    <tr><th>#</th><th>要记的</th><th>示例</th></tr>
+    <tr><td>1</td><td>基座模型全名 + 参数量</td><td>Qwen2.5-1.5B-Instruct</td></tr>
+    <tr><td>2</td><td>数据集 + 清洗后条数</td><td>XXX 指令集，去重后 500 条</td></tr>
+    <tr><td>3</td><td>显卡 + 显存峰值</td><td>RTX 4060 8GB，峰值 6.4GB</td></tr>
+    <tr><td>4</td><td>训练时长 / epoch / loss</td><td>25 分钟 / 3 epoch / 2.31→1.02</td></tr>
+    <tr><td>5</td><td>r / alpha / lr / 量化</td><td>16 / 32 / 2e-4 / NF4 4bit</td></tr>
+    <tr><td>6</td><td>一个具体失败 + 排查</td><td>如：OOM → 开梯度检查点 + 降 max_len</td></tr>
+    <tr><td>7</td><td>评估方式与结果</td><td>50 条留出集人工盲评，胜率 62%</td></tr>
+  </table>
+  <div class="amb"><b>评估别只报 loss：</b>留 50 条模型没见过的题，同一个 prompt 分别问「微调前 / 微调后」，人工或让大模型打分看谁更好。<b>loss 降 ≠ 回答变好</b>，这句在面试里说出来很加分。</div>
+  <div class="ok"><b>做完这一步，简历就能写：</b>「基于 HuggingFace PEFT，在 RTX 4060 8GB 单卡上使用 QLoRA 对 Qwen2.5-1.5B 进行指令微调，独立完成数据清洗、训练与评估；通过梯度检查点与 bf16 混合精度将显存峰值控制在 6.4GB，在 50 条留出集上人工盲评胜率 62%。」——每个数字你都答得上来，追问答不倒。</div>
+</div>
+
+<div class="foot">
+<b>顺序不能跳：</b>验收 → 装依赖 → 下模型 → 微调 → 记录。跳到第 4 步最容易因为环境没验好，在报错里耗一整天。<br>
+<b>诚实提醒：</b>第 2、3 步的网络与 bitsandbytes 兼容性是 Windows 上真实存在的不确定性，可能要绕路（先 LoRA 后 QLoRA）。这份清单给的是最短路径，不是保证一次成功。
+</div>
+
+</div>
+</body>
+</html>

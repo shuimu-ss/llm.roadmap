@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的 QLoRA 微调实验 · 结果与简历话术</title>
+<style>
+  :root{--bg:#f7f8fa;--card:#fff;--ink:#1a1d24;--sub:#4a5262;--line:#e3e7ee;
+    --accent:#1f5fd6;--green:#1e7a4b;--greenbg:#edf8f1;--red:#c0392b;--redbg:#fdf0ee;
+    --amber:#9a6700;--amberbg:#fff8e6}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;font-size:15px;line-height:1.75}
+  .wrap{max-width:960px;margin:0 auto;padding:30px 22px 70px}
+  header{background:linear-gradient(135deg,#1f5fd6,#3a86ff);color:#fff;border-radius:14px;padding:25px 27px;margin-bottom:20px}
+  header h1{margin:0 0 6px;font-size:25px}
+  header p{margin:0;opacity:.93;font-size:14px}
+  .big{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+  .big div{background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.34);
+    border-radius:10px;padding:9px 14px;min-width:150px}
+  .big b{display:block;font-size:21px;line-height:1.3}
+  .big span{font-size:12px;opacity:.9}
+  h2{font-size:18px;margin:27px 0 12px;padding-left:11px;border-left:4px solid var(--accent)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:17px 20px;margin-bottom:13px}
+  .ok{background:var(--greenbg);border-left:3px solid var(--green);padding:10px 13px;
+    border-radius:0 7px 7px 0;margin:9px 0;font-size:14px;color:#175c39}
+  .warn{background:var(--redbg);border-left:3px solid var(--red);padding:10px 13px;
+    border-radius:0 7px 7px 0;margin:9px 0;font-size:13.7px;color:#7d2b20}
+  .amb{background:var(--amberbg);border-left:3px solid var(--amber);padding:10px 13px;
+    border-radius:0 7px 7px 0;margin:9px 0;font-size:13.7px;color:#6b5417}
+  .say{background:#f2f6ff;border-left:3px solid var(--accent);padding:11px 14px;
+    border-radius:0 7px 7px 0;margin:9px 0;font-size:14.4px;line-height:1.85}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.8px;background:#fff}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#f0f4fb;color:var(--sub)}
+  code{background:#eef1f6;padding:1px 5px;border-radius:4px;font-size:12.7px;
+    font-family:Consolas,Monaco,monospace}
+  ul{margin:7px 0;padding-left:20px}li{margin:4px 0}
+  .foot{margin-top:24px;padding:15px 18px;background:#fff8e6;border:1px solid #f0dfae;
+    border-radius:10px;font-size:13.7px;color:#6b5417}
+  @media print{body{background:#fff}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>我的 QLoRA 微调实验 · 结果与简历话术</h1>
+  <p>这不是示例代码，是刚刚在你这台机器上真跑出来的结果。下面每个数字面试官追问你都答得上来。</p>
+  <div class="big">
+    <div><b>20% → 65%</b><span>留出集命中率（+45pp）</span></div>
+    <div><b>4.90 → 0.13</b><span>训练 loss</span></div>
+    <div><b>2.47 GB</b><span>显存峰值 / 8GB 卡</span></div>
+    <div><b>39.5 秒</b><span>训练耗时</span></div>
+  </div>
+</header>
+
+<h2>一、7 个数字（面试「你真做过吗」的标准答案）</h2>
+<div class="card">
+<table>
+  <tr><th>#</th><th>要记的</th><th>你的真实结果</th></tr>
+  <tr><td>1</td><td>基座模型</td><td>Qwen2.5-0.5B-Instruct（0.5B 参数）</td></tr>
+  <tr><td>2</td><td>数据集与清洗</td><td>自建领域指令集，117 条原始 → 去噪/去重/长度过滤后 <b>100 条</b>；训练 80 / 验证 20，交叉泄漏 0</td></tr>
+  <tr><td>3</td><td>显卡与显存峰值</td><td>RTX 4060 Laptop 8GB，峰值 <b>2.47 GB</b></td></tr>
+  <tr><td>4</td><td>训练时长 / loss</td><td>3 epoch / 30 step，<b>39.5 秒</b>，loss <b>4.8958 → 0.1257</b></td></tr>
+  <tr><td>5</td><td>关键参数</td><td>4-bit NF4 + 双重量化，r=16 / alpha=32 / lr=2e-4 / max_len=256 / bf16 / 梯度检查点；仅训练 <b>2.716%</b> 参数（879 万 / 3.24 亿）</td></tr>
+  <tr><td>6</td><td>踩过的坑</td><td>① transformers 5.x 的 <code>apply_chat_template</code> 返回 BatchEncoding 而非 list，导致类型报错，改为兼容取值后解决；② 未设 <code>pad_token</code> 会报错，用 eos_token 补齐；③ prompt 部分 label 不 mask 成 -100 会让模型学背问题</td></tr>
+  <tr><td>7</td><td>评估与效果</td><td>20 条留出集，同一 prompt 贪心解码，关键词命中率 <b>20% → 65%</b>（4/20 → 13/20）；平均回答长度 137.4 → 47.5 字（不再东拉西扯）</td></tr>
+</table>
+<div class="ok"><b>最有说服力的一点：</b>微调前模型把 RoPE 胡说成「相机姿态估计算法」、把 QLoRA 说成「阿里物联网平台」、把 HiBurn 波特率答成 115200；微调后基本能命中 Query/Key、LiteOS-M、921600 这些正确术语。这个前后对比是可截图、可现场复现的硬证据。</div>
+</div>
+
+<h2>二、简历直接抄这句</h2>
+<div class="card">
+  <div class="say">基于 HuggingFace Transformers / PEFT，在 RTX 4060 8GB 单卡上使用 <b>QLoRA（4-bit NF4 双重量化）</b> 对 Qwen2.5-0.5B-Instruct 做领域指令微调；独立完成数据清洗（去重、去噪、防训练验证集泄漏）、chat template 对齐与 prompt label mask；通过 bf16 混合精度与梯度检查点将显存峰值控制在 <b>2.47GB</b>，仅训练 2.7% 参数，3 epoch 内 loss 由 4.90 降至 0.13；在 20 条留出集上关键词命中率由 <b>20% 提升至 65%（+45pp）</b>，回答冗余显著下降。</div>
+  <div class="amb"><b>用词提醒：</b>写"0.5B"不要写成"7B"；写"关键词命中率 +45pp"不要写"准确率 65%"（指标口径不同，被追问会露馅）；没做人工盲评就别写"人工评估胜率"。所有形容词都要能被上面 7 个数字支撑。</div>
+</div>
+
+<h2>三、面试官顺着会问的 4 句，怎么接</h2>
+<div class="card">
+<table>
+  <tr><th>追问</th><th>你的回答</th></tr>
+  <tr><td>为什么选 0.5B？</td><td>单卡 8GB，先验证微调链路与数据质量是否成立；小模型迭代快，39 秒一轮，能快速定位是数据问题还是参数问题。规模不是这个实验的目的。</td></tr>
+  <tr><td>为什么显存只有 2.47GB？</td><td>基座 4-bit 量化后权重约 0.3GB；LoRA 只训 879 万参数，不存全量梯度和 Adam 状态；再叠加梯度检查点与 batch=1 + 梯度累积 8。<b>省的大头是不存全量梯度和优化器状态</b>。</td></tr>
+  <tr><td>65% 够好吗？剩下 35% 怎么回事？</td><td>不够好，我不回避。训练只有 80 条、3 epoch、0.5B 基座，像 NF4、GQA 这类抽象概念模型仍会编造术语。要继续提升得扩数据量、加通用数据回放、或换更大基座。<b>能指出自己实验的缺陷，比报一个漂亮数字更可信。</b></td></tr>
+  <tr><td>loss 降了就等于变好了吗？</td><td>不等于。所以我另外做了留出集生成对比；loss 只反映拟合程度，回答是否有用还得看外部指标。</td></tr>
+</table>
+</div>
+
+<h2>四、必须说清的两个瑕疵（别在面试里吹过头）</h2>
+<div class="card">
+  <div class="warn"><b>① 数据集是我用模板组合生成的，不是真实业务数据。</b>100 条里同一个知识点有 4 种问法，模型容易靠记忆而非泛化取胜。所以这个实验能证明「我会跑通全流程」，但<b>不能证明模型学到了通用能力</b>。面试官问数据来源，如实说是自建教学数据集；想更硬，下一步换成公开数据集（如 Alpaca 中文子集）再跑一次。</div>
+  <div class="warn"><b>② 命中率是关键词匹配，不是人工盲评。</b>口径是「标准答案的关键术语是否出现在生成里」，会有误判。写简历时用「关键词命中率」这个准确说法，别简写成准确率。</div>
+  <div class="amb"><b>换个角度：</b>这两个瑕疵恰好是加分项。面试官最怕背八股的人，你能主动说「我的数据量太小、评估口径有局限、下一步该怎么做」，说明你真做过、也知道怎么改进。<b>不要把它们藏起来。</b></div>
+</div>
+
+<h2>五、产出文件都在哪</h2>
+<div class="card">
+<table>
+  <tr><th>文件</th><th>作用</th></tr>
+  <tr><td><code>output/train_log.json</code></td><td>训练全部参数与结果（7 个数字的机器可读版）</td></tr>
+  <tr><td><code>output/eval_result.json</code></td><td>微调前后评估数字</td></tr>
+  <tr><td><code>output/eval_examples.md</code></td><td><b>8 个真实问答前后对比</b>，面试可截图、可现场复现</td></tr>
+  <tr><td><code>output/adapter/</code></td><td>微调出来的 LoRA 权重</td></tr>
+  <tr><td><code>data/report.txt</code></td><td>数据清洗日志（去重 15 条、去噪 2 条、泄漏 0）</td></tr>
+  <tr><td><code>make_dataset.py / finetune.py / evaluate.py</code></td><td>数据清洗 / 微调 / 评估三个脚本，push 到 GitHub 就是项目仓库</td></tr>
+  <tr><td><code>finetune_run.log / eval_run.log</code></td><td>真实训练与评估输出，可作实验记录</td></tr>
+</table>
+<div class="ok">目录：<code>本仓库根目录（llm-roadmap/）</code>　—— 把这个仓库传到 GitHub，README 就用上面第二段的话术，简历「开源项目」一栏就有着落了。</div>
+</div>
+
+<div class="foot">
+<b>下一步只有一个动作最划算：</b>把 <code>llm-roadmap/</code> 传到 GitHub（我可以直接帮你建仓库结构、写 README、生成 commit），这样简历上「HuggingFace / GitHub 有开源项目」这一条才真正成立。<br>
+<b>诚实结论：</b>这次跑通的是「完整链路 + 可复述的真实数字」，不是「效果很好的模型」。前者已经够写简历、够答追问；后者需要更多数据和更大模型，不属于半天能解决的事。
+</div>
+
+</div>
+</body>
+</html>

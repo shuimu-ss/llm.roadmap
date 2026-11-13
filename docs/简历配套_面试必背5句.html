@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>简历配套 · 面试必背 5 句</title>
+<style>
+  :root{--bg:#f7f8fa;--card:#fff;--ink:#1a1d24;--sub:#4a5262;--line:#e3e7ee;
+    --accent:#1f5fd6;--green:#1e7a4b;--greenbg:#edf8f1;--red:#c0392b;--redbg:#fdf0ee;
+    --amber:#9a6700;--amberbg:#fff8e6}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;font-size:15px;line-height:1.78}
+  .wrap{max-width:880px;margin:0 auto;padding:30px 22px 70px}
+  header{background:linear-gradient(135deg,#1f5fd6,#3a86ff);color:#fff;border-radius:14px;padding:24px 26px;margin-bottom:20px}
+  header h1{margin:0 0 6px;font-size:24px}
+  header p{margin:0;opacity:.94;font-size:14px}
+  h2{font-size:18px;margin:26px 0 12px;padding-left:11px;border-left:4px solid var(--accent)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:13px}
+  .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+  .num{background:var(--accent);color:#fff;font-weight:700;font-size:13px;min-width:26px;height:26px;
+    border-radius:7px;display:inline-flex;align-items:center;justify-content:center}
+  .hd b{font-size:15.5px}
+  .say{background:#f2f6ff;border-left:3px solid var(--accent);padding:10px 14px;
+    border-radius:0 7px 7px 0;margin:8px 0;font-size:14.5px;line-height:1.85}
+  .why{font-size:13.5px;color:var(--sub);margin:6px 0 0}
+  .why b{color:var(--ink)}
+  .ok{background:var(--greenbg);border-left:3px solid var(--green);padding:9px 13px;
+    border-radius:0 7px 7px 0;margin:9px 0;font-size:13.7px;color:#175c39}
+  .warn{background:var(--redbg);border-left:3px solid var(--red);padding:9px 13px;
+    border-radius:0 7px 7px 0;margin:9px 0;font-size:13.6px;color:#7d2b20}
+  .amb{background:var(--amberbg);border-left:3px solid var(--amber);padding:9px 13px;
+    border-radius:0 7px 7px 0;margin:9px 0;font-size:13.6px;color:#6b5417}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.6px;background:#fff}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#f0f4fb;color:var(--sub)}
+  ul{margin:7px 0;padding-left:20px}li{margin:4px 0}
+  code{background:#eef1f6;padding:1px 5px;border-radius:4px;font-size:12.7px;font-family:Consolas,Monaco,monospace}
+  .foot{margin-top:24px;padding:15px 18px;background:#fff8e6;border:1px solid #f0dfae;
+    border-radius:10px;font-size:13.7px;color:#6b5417}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>简历配套 · 面试必背 5 句</h1>
+  <p>回答「这要学什么吗」：不用学写代码。把这 5 句讲明白，简历上每一条你都扛得住追问。</p>
+</header>
+
+<div class="card">
+  <div class="ok"><b>先给结论：</b>你不需要看懂 <code>finetune.py</code>。面试官不会让你默写代码，只会顺着简历上的数字问「为什么 / 怎么做 / 遇到什么坑」。<b>需要学的是「说法」，不是「写法」。</b>下面 5 句，每句 20 秒，共约 2 分钟，看 3 遍就能说。</div>
+  <div class="amb"><b>唯一要记的 3 个名词</b>（不用会推导，知道指什么就行）：<b>LoRA</b>＝冻结原模型只训一小张「勘误表」；<b>4-bit 量化</b>＝把原模型压成口袋本省地方；<b>留出集</b>＝模型没见过的考题，用来检验是不是真学会了。</div>
+</div>
+
+<h2>5 句话（照着念，别背公式）</h2>
+
+<div class="card">
+  <div class="hd"><span class="num">1</span><b>「我做了什么」—— 开场 10 秒</b></div>
+  <div class="say">我在一张 8GB 的 4060 笔记本显卡上，用 QLoRA 微调了一个 0.5B 的开源模型 Qwen，让它按我们专业领域的问答格式回答。从数据清洗、训练到效果对比，整条链路是我自己跑通的。</div>
+  <div class="why"><b>为什么这么答：</b>先给「硬件约束 + 模型规模 + 做了什么」，面试官马上能定位难度；别一上来说「我熟悉大模型微调」，太空。</div>
+</div>
+
+<div class="card">
+  <div class="hd"><span class="num">2</span><b>「为什么显存只要 2.47GB」—— 最容易被追问的一句</b></div>
+  <div class="say">省显存的大头不是「训练参数少」，而是<b>不用存全量梯度和 Adam 优化器状态</b>。全量微调 7B 光权重加梯度加优化器就要 56GB 以上；我用的是 4-bit 量化的 0.5B 基座，只训 2.7% 的参数，再加 bf16、梯度检查点和 batch=1 加梯度累积，峰值压到 2.47GB。</div>
+  <div class="why"><b>这句最值钱：</b>大部分背八股的人只会说「LoRA 参数少」，说不出优化器状态这一层。你答出这句，面试官基本认定你真跑过。</div>
+</div>
+
+<div class="card">
+  <div class="hd"><span class="num">3</span><b>「数据怎么处理的」—— 体现工程习惯</b></div>
+  <div class="say">117 条原始数据，先去空值和乱码、做精确去重、按长度过滤，得到 100 条；然后<b>先切分再校验训练集和验证集有没有重复</b>，最后 80 条训练、20 条验证，交叉泄漏 0 条。另外把 prompt 部分的 label 屏蔽掉，只对回答算损失，避免模型去背问题。</div>
+  <div class="why"><b>主动加分的点：</b>「防测试集泄漏」和「label mask」是新手最容易漏的两件事，说出来显得有实测经验。</div>
+</div>
+
+<div class="card">
+  <div class="hd"><span class="num">4</span><b>「效果怎么算的」—— 别把口径说错</b></div>
+  <div class="say">我留了 20 条模型没见过的题，同一个问题分别问微调前和微调后，看标准答案的关键术语有没有出现在回答里，命中率从 20% 提到 65%；同时回答从平均 137 字缩到 47 字，不再东拉西扯。这是<b>关键词命中率，不是准确率</b>，也不是人工评分。</div>
+  <div class="warn"><b>千万别说：</b>「准确率 65%」「模型效果提升 45%」。口径一错，追问两句就穿帮。也别说「loss 降了所以效果好了」——loss 只说明拟合，不等于回答有用。</div>
+</div>
+
+<div class="card">
+  <div class="hd"><span class="num">5</span><b>「有什么不足 / 下一步」—— 主动认短板反而加分</b></div>
+  <div class="say">数据量只有 100 条、还是模板组合生成的，同一个知识点有 4 种问法，模型可能靠记忆而不是真泛化；基座也只有 0.5B，像 NF4、GQA 这种抽象概念它还会编术语。所以这个实验证明的是我能跑通链路，不能证明模型学到了通用能力。下一步想换公开中文指令集，加通用数据回放，再做人工盲评。</div>
+  <div class="why"><b>为什么必答：</b>面试官一定会找你项目的漏洞。<b>你自己先说出来，比被问出来强得多</b>——前者是「有判断力」，后者是「没想清楚」。</div>
+</div>
+
+<h2>再准备 3 个「一问就到」的小问题</h2>
+<table>
+  <tr><th>追问</th><th>一句话接住</th></tr>
+  <tr><td>为什么用 0.5B 不用 7B？</td><td>单卡只有 8GB，先验证链路和数据质量；小模型 39 秒一轮，能快速分清是数据问题还是参数问题。</td></tr>
+  <tr><td>训练时踩过什么坑？</td><td>transformers 5.x 的 chat template 返回类型变了导致报错；还有 pad_token 没设会崩、label 不 mask 会学着背问题。都是查报错+改兼容解决的。</td></tr>
+  <tr><td>预训练和微调区别？</td><td>预训练是海量无标注文本学通用语言知识，微调是少量指令对学「按人要求回答」；我做的是后者里的 SFT。</td></tr>
+</table>
+
+<h2>时间怎么花最划算</h2>
+<table>
+  <tr><th>做什么</th><th>花多久</th><th>值不值</th></tr>
+  <tr><td>把上面 5 句念 3 遍</td><td>约 20 分钟</td><td><b>最值</b>，直接覆盖简历全部追问</td></tr>
+  <tr><td>翻一遍 <code>results/eval_examples.md</code> 的 8 个前后对比</td><td>约 10 分钟</td><td>值，被要求举例时有真实素材</td></tr>
+  <tr><td>看面试速查手册的 5 道必问题</td><td>约 30 分钟</td><td>值，概念关不被刷</td></tr>
+  <tr><td>去啃代码 / 学公式推导</td><td>几小时起</td><td><b>现在不值</b>，岗位面试不考默写，先把「能讲明白」补上</td></tr>
+</table>
+
+<div class="foot">
+<b>诚实结论：</b>这 5 句能让你在「你真做过吗」这关站得住，但<b>不代表你懂了大模型</b>。如果面试官往深里问注意力数学、分布式并行、RLHF，你还是会答不上——所以简历里我把这些放在「了解、未实操」，别改成「熟练掌握」。<b>能守住边界，比假装全都会更安全。</b>
+</div>
+
+</div>
+</body>
+</html>

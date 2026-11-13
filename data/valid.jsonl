@@ -1,0 +1,20 @@
+{"instruction": "RoPE 位置编码作用在哪个矩阵上，一句话说明。", "input": "", "output": "RoPE 通过旋转变换直接作用于 Query 和 Key，使二者内积只依赖相对位置。"}
+{"instruction": "请问RoPE 位置编码作用在哪个矩阵上？", "input": "", "output": "RoPE 通过旋转变换直接作用于 Query 和 Key，使二者内积只依赖相对位置。"}
+{"instruction": "解释一下：GQA 如何降低显存。", "input": "", "output": "多个 Query 头共享一组 Key/Value 头，直接缩小 KV Cache 数倍。"}
+{"instruction": "请问HiBurn 烧录时波特率一般设为多少？", "input": "", "output": "HiBurn 烧录 Hi3861 时串口波特率通常设为 921600，并需勾选 Auto burn 后按复位键。"}
+{"instruction": "请问梯度检查点的原理？", "input": "", "output": "前向只保存少量检查点，反向时重算中间激活，用计算时间换显存。"}
+{"instruction": "QLoRA 的 NF4 是什么，一句话说明。", "input": "", "output": "NF4 是面向正态分布权重设计的 4-bit 量化数据类型，配合双重量化进一步压缩基座。"}
+{"instruction": "请问OpenHarmony 轻量系统用的内核是什么？", "input": "", "output": "OpenHarmony 轻量系统使用 LiteOS-M 内核，面向资源受限的 MCU 设备，典型如 Hi3861。"}
+{"instruction": "灾难性遗忘怎么缓解，一句话说明。", "input": "", "output": "降低学习率、减少 epoch、混入通用数据回放，或用 LoRA 冻结基座。"}
+{"instruction": "解释一下：hb build -f 中的 -f 表示什么。", "input": "", "output": "-f 表示 full build 全量编译，会清理旧产物并重新构建整个工程。"}
+{"instruction": "微调效果能不能只看 loss，一句话说明。", "input": "", "output": "不能。loss 下降只说明拟合更好，不等于回答质量提升，需留出集人工或模型打分评估。"}
+{"instruction": "请问指令微调时 label 要怎么处理？", "input": "", "output": "把 prompt 部分的 label 置为 -100，只对回答部分计算损失，避免模型学着背问题。"}
+{"instruction": "HiBurn 烧录时波特率一般设为多少，一句话说明。", "input": "", "output": "HiBurn 烧录 Hi3861 时串口波特率通常设为 921600，并需勾选 Auto burn 后按复位键。"}
+{"instruction": "解释一下：vLLM 的 PagedAttention 解决什么问题。", "input": "", "output": "把 KV Cache 按块分页管理，消除按最大长度预留造成的显存碎片与浪费。"}
+{"instruction": "请简要回答：KV Cache 为什么能加速推理？", "input": "", "output": "缓存已生成 token 的 Key/Value，每步只计算新 token，避免重复计算历史。"}
+{"instruction": "请简要回答：指令微调时 label 要怎么处理？", "input": "", "output": "把 prompt 部分的 label 置为 -100，只对回答部分计算损失，避免模型学着背问题。"}
+{"instruction": "请问LoRA 为什么能省显存？", "input": "", "output": "LoRA 冻结基座权重，只训练低秩增量矩阵，因此无需保存全量梯度和 Adam 优化器状态。"}
+{"instruction": "请简要回答：QLoRA 的 NF4 是什么？", "input": "", "output": "NF4 是面向正态分布权重设计的 4-bit 量化数据类型，配合双重量化进一步压缩基座。"}
+{"instruction": "请简要回答：CLIP 是怎么对齐图文的？", "input": "", "output": "用对比学习把图像与文本编码到同一向量空间，拉近配对样本、推远不配对样本。"}
+{"instruction": "请简要回答：微调效果能不能只看 loss？", "input": "", "output": "不能。loss 下降只说明拟合更好，不等于回答质量提升，需留出集人工或模型打分评估。"}
+{"instruction": "请问自注意力为什么需要位置编码？", "input": "", "output": "自注意力对输入顺序不敏感（置换等变），必须显式注入位置信息才能区分词序。"}

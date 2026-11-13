@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>上传到 GitHub · 最后 3 步</title>
+<style>
+  :root{--bg:#f7f8fa;--card:#fff;--ink:#1a1d24;--sub:#4a5262;--line:#e3e7ee;
+    --accent:#1f5fd6;--green:#1e7a4b;--greenbg:#edf8f1;--red:#c0392b;--redbg:#fdf0ee;
+    --amber:#9a6700;--amberbg:#fff8e6}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;font-size:15px;line-height:1.75}
+  .wrap{max-width:900px;margin:0 auto;padding:30px 22px 70px}
+  header{background:linear-gradient(135deg,#1f5fd6,#3a86ff);color:#fff;border-radius:14px;padding:24px 26px;margin-bottom:20px}
+  header h1{margin:0 0 6px;font-size:24px}
+  header p{margin:0;opacity:.93;font-size:14px}
+  .bar{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+  .bar span{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.34);
+    padding:3px 11px;border-radius:18px;font-size:12.5px}
+  h2{font-size:18px;margin:26px 0 12px;padding-left:11px;border-left:4px solid var(--accent)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:17px 20px;margin-bottom:13px}
+  .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:9px}
+  .num{background:var(--accent);color:#fff;font-weight:700;font-size:13px;min-width:26px;height:26px;
+    border-radius:7px;display:inline-flex;align-items:center;justify-content:center}
+  .hd b{font-size:16px}
+  .ok{background:var(--greenbg);border-left:3px solid var(--green);padding:9px 13px;
+    border-radius:0 7px 7px 0;margin:9px 0;font-size:13.8px;color:#175c39}
+  .warn{background:var(--redbg);border-left:3px solid var(--red);padding:9px 13px;
+    border-radius:0 7px 7px 0;margin:9px 0;font-size:13.6px;color:#7d2b20}
+  .amb{background:var(--amberbg);border-left:3px solid var(--amber);padding:9px 13px;
+    border-radius:0 7px 7px 0;margin:9px 0;font-size:13.6px;color:#6b5417}
+  pre{background:#1e2430;color:#e8edf6;border-radius:8px;padding:12px 14px;overflow-x:auto;
+    font-size:12.8px;line-height:1.6;margin:9px 0;font-family:Consolas,Monaco,monospace}
+  pre .c{color:#8fa3c4}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.7px;background:#fff}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#f0f4fb;color:var(--sub)}
+  code{background:#eef1f6;padding:1px 5px;border-radius:4px;font-size:12.7px;
+    font-family:Consolas,Monaco,monospace}
+  ul{margin:7px 0;padding-left:20px}li{margin:4px 0}
+  .foot{margin-top:24px;padding:15px 18px;background:#fff8e6;border:1px solid #f0dfae;
+    border-radius:10px;font-size:13.7px;color:#6b5417}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>上传到 GitHub · 最后 3 步</h1>
+  <p>仓库已经建好、提交好了。你只需要做下面 3 件事，其余我都做完了。</p>
+  <div class="bar"><span>本地提交 adfa017</span><span>31 个文件</span><span>仓库 189 KB</span>
+  <span>大文件已排除</span><span>GitHub 直连已验证</span></div>
+</header>
+
+<div class="card">
+  <div class="ok"><b>我已经替你做完的：</b>整理目录、写 README、.gitignore、requirements.txt、LICENSE、下载脚本、实验证据归档；<code>git init</code> + 2 次本地提交；修好 Windows 证书吊销检查（GitHub 直连实测返回 9354c5f）；写好一键推送脚本。<br>
+  <b>没做的只有一件：</b>用你的账号登录并推送 —— 这个必须本人做，我不能替你输账号密码。</div>
+</div>
+
+<h2>你要做的 3 步</h2>
+
+<div class="card">
+  <div class="hd"><span class="num">1</span><b>在 GitHub 网页上新建一个空仓库</b></div>
+  <ul>
+    <li>打开 github.com → 右上角 <b>+</b> → <b>New repository</b></li>
+    <li>仓库名填 <code>llm-roadmap</code>，选 <b>Public</b>（简历要给别人看，必须公开）</li>
+    <li><b>不要</b>勾选 Add a README / .gitignore / license —— 我都已经建好了，勾了会冲突</li>
+    <li>点 <b>Create repository</b></li>
+  </ul>
+  <div class="amb">如果 GitHub 打不开或很慢，可以改用 <b>Gitee</b>（国内直连实测通）：在 gitee.com 新建同名公开仓库，后面把地址换成 gitee 的即可，脚本两处都支持。简历上 Gitee 链接同样能用，但国际认可度低于 GitHub。</div>
+</div>
+
+<div class="card">
+  <div class="hd"><span class="num">2</span><b>生成一个 token（当密码用）</b></div>
+  <ul>
+    <li>GitHub：头像 → <b>Settings</b> → 左侧最下 <b>Developer settings</b> → <b>Personal access tokens</b> → <b>Tokens (classic)</b> → <b>Generate new token (classic)</b></li>
+    <li>勾上 <code>repo</code> 这一项就够，有效期选 30 天，生成后<b>立刻复制</b>（只显示一次）</li>
+  </ul>
+  <div class="warn"><b>安全：</b>token 等于账号密码。它只写进本地的 <code>push_config.json</code>，该文件已被 .gitignore 排除，<b>绝不会上传</b>。用完建议去 GitHub 把 token 删掉（Revoke）。别发在聊天、别贴截图里。</div>
+</div>
+
+<div class="card">
+  <div class="hd"><span class="num">3</span><b>把 4 个信息发给我，我直接帮你推</b></div>
+  <table>
+    <tr><th>要给我的</th><th>说明</th></tr>
+    <tr><td>① GitHub 用户名</td><td>网页右上角那个名字</td></tr>
+    <tr><td>② 仓库地址</td><td>形如 <code>https://github.com/用户名/llm-roadmap.git</code></td></tr>
+    <tr><td>③ token</td><td>第 2 步复制的那串</td></tr>
+    <tr><td>④ 注册邮箱</td><td>用来修正提交作者，否则 GitHub 不认这份贡献</td></tr>
+  </table>
+  <div class="ok">给我这 4 项后，我会：修正提交作者 → 设置 remote → 推送 → 把 token 从配置里抹掉 → 把公开链接发给你。<b>你不用敲任何命令。</b></div>
+  <div class="amb"><b>不想把 token 发我？</b>完全可以，理解。那就自己来：把 <code>push_config.example.json</code> 复制成 <code>push_config.json</code>，填好 4 个字段，然后在该目录运行 <code>python push.py</code> 一行搞定。<br>
+  <b>或者最省事：</b>直接把整个 <code>llm-roadmap</code> 文件夹拖进 GitHub Desktop / 用网页版 "upload files" 上传（注意<b>别传 models/ 和 output/</b>，那 1GB 会被拒）。</div>
+</div>
+
+<h2>推完之后简历怎么写</h2>
+<div class="card">
+  <div class="ok"><b>开源项目一栏：</b><br>
+  <code>GitHub: github.com/你的用户名/llm-roadmap</code>　—— QLoRA 微调完整复现仓库，含数据清洗、训练、评估脚本与实测结果记录。</div>
+  <ul>
+    <li>把链接放进简历<b>个人信息栏</b>（和电话邮箱并列），不要只藏在正文里</li>
+    <li>项目描述用 <code>docs/我的实验结果_简历可写.html</code> 里那句话，每个数字都能被仓库里的 <code>results/</code> 佐证</li>
+    <li>面试官点开仓库能看到：README 有结果表、results/ 有 JSON 证据、eval_examples.md 有前后对比、脚本能复现 —— 这就是「有开源项目」和「挂个空仓库」的区别</li>
+  </ul>
+</div>
+
+<h2>仓库体检（已完成）</h2>
+<table>
+  <tr><th>检查项</th><th>结果</th></tr>
+  <tr><td>提交数</td><td>2（<code>988e6fa</code>、<code>adfa017</code>）</td></tr>
+  <tr><td>跟踪文件</td><td>31 个，工作区干净</td></tr>
+  <tr><td>.git 体积</td><td>189 KB</td></tr>
+  <tr><td>模型权重 954MB / adapter 45MB</td><td>已排除（GitHub 单文件上限 100MB）</td></tr>
+  <tr><td>运行日志 / 缓存 / .pth</td><td>已排除，结果已整理进 results/</td></tr>
+  <tr><td>含 token 的 push_config.json</td><td>已排除</td></tr>
+  <tr><td>中文文件名</td><td>已设 <code>core.quotepath=false</code>，正常显示</td></tr>
+  <tr><td>GitHub 直连</td><td>已通（修复 <code>CRYPT_E_NO_REVOCATION_CHECK</code>）</td></tr>
+</table>
+
+<div class="foot">
+<b>诚实提醒：</b>把仓库传上去只是让「有开源项目」这一条成立，它不会自动变成面试加分项 —— 加分来自你能讲清楚 README 里那些数字。所以推完之后，回到 <code>docs/大模型算法岗_面试速查手册.html</code> 把「你真做过吗」那一关的 4 个追问练一遍，比多挂 3 个仓库有用。<br><br>
+<b>目录：</b><code>本仓库根目录（llm-roadmap/）</code>
+</div>
+
+</div>
+</body>
+</html>

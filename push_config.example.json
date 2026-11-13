@@ -1,0 +1,6 @@
+{
+  "remote_url": "https://github.com/你的用户名/llm-roadmap.git",
+  "token": "github_pat_在这里填你的token",
+  "user_name": "你的GitHub用户名",
+  "user_email": "你注册GitHub用的邮箱"
+}

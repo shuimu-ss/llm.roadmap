@@ -1,0 +1,30 @@
+# 模型权重 / 运行产物（体积过大，GitHub 单文件上限 100MB，必须忽略）
+# 实验结果已整理进 results/，故整个 output/ 不入库
+models/
+output/
+*.safetensors
+*.bin
+*.pth
+*.pt
+
+# 运行日志与临时文件（结果已整理进 results/）
+*.log
+__pycache__/
+*.pyc
+.cache/
+.venv/
+env/
+
+# 含 token 的个人配置，绝不能入库
+push_config.json
+
+# 简历成品含姓名/学号/联系方式，不推到公开仓库（生成脚本可入库）
+*简历*.docx
+*简历*.pdf
+docs/简历_*大模型算法实习.html
+pdf_pages.txt
+
+# 系统文件
+Thumbs.db
+.DS_Store
+~$*

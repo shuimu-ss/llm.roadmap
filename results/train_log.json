@@ -1,0 +1,19 @@
+{
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "mode": "QLoRA (4-bit NF4)",
+  "train_samples": 80,
+  "epochs": 3,
+  "steps": 30,
+  "loss_start": 4.8958,
+  "loss_end": 0.1257,
+  "r": 16,
+  "lora_alpha": 32,
+  "lr": 0.0002,
+  "max_len": 256,
+  "bf16": true,
+  "gradient_checkpointing": true,
+  "peak_gpu_mem_gb": 2.47,
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "train_seconds": 39.5,
+  "trainable_params": 8798208
+}

@@ -1,0 +1,16 @@
+{
+  "before": {
+    "hit_rate": 0.2,
+    "hits": 4,
+    "total": 20,
+    "avg_len": 137.4
+  },
+  "after": {
+    "hit_rate": 0.65,
+    "hits": 13,
+    "total": 20,
+    "avg_len": 47.5
+  },
+  "delta": 0.45,
+  "method": "留出集 20 条，关键词命中率 + 人工可核查的固定 prompt 生成"
+}
